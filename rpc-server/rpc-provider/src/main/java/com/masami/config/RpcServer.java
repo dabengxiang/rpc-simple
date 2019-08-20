@@ -5,7 +5,14 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @Author: gyc
@@ -13,16 +20,53 @@ import java.util.Map;
  */
 public class RpcServer implements ApplicationContextAware, InitializingBean {
 
+    ExecutorService executorService= Executors.newCachedThreadPool();
+
+    private int port ;
+
+
+    private Map<String,Object>map = new HashMap<String, Object>();
+
+    public RpcServer(int port) {
+        this.port = port;
+    }
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         Map<String, Object> map = applicationContext.getBeansWithAnnotation(RpcService.class);
-        System.out.println(map);
+        if(map.size()!=0){
+            for (String key : map.keySet()) {
+                Object bean = map.get(key);
+                RpcService rpcService = bean.getClass().getAnnotation(RpcService.class);
+                Class<?> value = rpcService.value();
+                map.put(value.getName(),bean);
+            }
+
+        }
 
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet()  {
+        ServerSocket serverSocket = null;
+        try {
+             serverSocket = new ServerSocket(this.port);
+            while(true){//不断接受请求
+                //每一个socket 交给一个processorHandler来处理
+                Socket accept = serverSocket.accept();
+                executorService.execute(new ProcessorHandler(accept,map));
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            if(serverSocket!=null){
+                try {
+                    serverSocket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 
     }
 }
