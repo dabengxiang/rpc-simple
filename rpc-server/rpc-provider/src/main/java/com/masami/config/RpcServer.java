@@ -18,7 +18,7 @@ public class RpcServer implements ApplicationContextAware, InitializingBean {
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         Map<String, Object> map = applicationContext.getBeansWithAnnotation(RpcService.class);
         System.out.println(map);
-        
+
     }
 
     @Override
