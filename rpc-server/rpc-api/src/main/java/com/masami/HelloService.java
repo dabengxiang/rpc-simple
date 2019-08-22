@@ -8,4 +8,6 @@ public interface HelloService {
 
     public void sayHi(String name);
 
+    public String getGirlName();
+
 }

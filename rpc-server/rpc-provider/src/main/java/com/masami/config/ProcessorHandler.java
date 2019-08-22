@@ -79,7 +79,7 @@ public class ProcessorHandler implements Runnable{
 
         }
 
-        return method.invoke(handleMap.get(rpcRequest),rpcRequest.getArgs());
+        return method.invoke(handleMap.get(rpcRequest.getClassName()),rpcRequest.getArgs());
 
     }
 }

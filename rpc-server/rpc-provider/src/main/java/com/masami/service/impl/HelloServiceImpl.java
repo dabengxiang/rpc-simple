@@ -13,4 +13,9 @@ public class HelloServiceImpl implements HelloService {
     public void sayHi(String name) {
         System.out.println("向"+name+"sayHi");
     }
+
+    @Override
+    public String getGirlName() {
+        return "小红";
+    }
 }

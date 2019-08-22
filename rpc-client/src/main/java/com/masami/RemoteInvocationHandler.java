@@ -24,7 +24,7 @@ public class RemoteInvocationHandler implements InvocationHandler {
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
         RpcRequest rpcRequest = new RpcRequest();
-        rpcRequest.setClassName(proxy.getClass().getName());
+        rpcRequest.setClassName(method.getDeclaringClass().getName());
         rpcRequest.setMethodName(method.getName());
         rpcRequest.setArgs(args);
         RpcNetTransport rpcNetTransport = new RpcNetTransport(serverIp, serverPort);

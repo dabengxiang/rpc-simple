@@ -6,7 +6,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
@@ -25,7 +24,7 @@ public class RpcServer implements ApplicationContextAware, InitializingBean {
     private int port ;
 
 
-    private Map<String,Object>map = new HashMap<String, Object>();
+    private Map<String,Object>hashMap = new HashMap<String, Object>();
 
     public RpcServer(int port) {
         this.port = port;
@@ -39,7 +38,7 @@ public class RpcServer implements ApplicationContextAware, InitializingBean {
                 Object bean = map.get(key);
                 RpcService rpcService = bean.getClass().getAnnotation(RpcService.class);
                 Class<?> value = rpcService.value();
-                map.put(value.getName(),bean);
+                hashMap.put(value.getName(),bean);
             }
 
         }
@@ -54,7 +53,7 @@ public class RpcServer implements ApplicationContextAware, InitializingBean {
             while(true){//不断接受请求
                 //每一个socket 交给一个processorHandler来处理
                 Socket accept = serverSocket.accept();
-                executorService.execute(new ProcessorHandler(accept,map));
+                executorService.execute(new ProcessorHandler(accept,hashMap));
             }
         }catch (Exception e){
             e.printStackTrace();

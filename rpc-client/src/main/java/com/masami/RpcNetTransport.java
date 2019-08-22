@@ -28,7 +28,7 @@ public class RpcNetTransport {
             Socket socket = new Socket(serverIp, serverPort);
              objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             objectOutputStream.writeObject(rpcRequest);
-            objectOutputStream.flush();
+//            objectOutputStream.flush();
              objectInputStream = new ObjectInputStream(socket.getInputStream());
             Object result = objectInputStream.readObject();
             return result;

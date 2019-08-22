@@ -8,8 +8,8 @@ package com.masami;
 public class App {
 
     public static void main(String[] args) {
-
         HelloService helloService = RpcProxyClient.proxyClient(HelloService.class, "127.0.0.1", 8080);
-        helloService.sayHi("张三");
+        String girlName = helloService.getGirlName();
+        System.out.println(girlName);
     }
 }
